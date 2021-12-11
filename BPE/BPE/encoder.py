@@ -1,14 +1,14 @@
 class BPEncoder:
 
     def __init__(self) -> None:
-        self.encoding_dict = dict()
+        self.encoding_dict = []
         self.allowed_chars = dict(zip([i for i in range(33, 255, 1)], [chr(i) for i in range(33, 255, 1)]))
     
     def encode(self, text: str) -> str:
         self.text = text
         # self._wipe_data()
         text = self._prepare_text()
-        self._calculate_encoding_dict()
+        self._calculate_encoding_array()
         return [self.text, self.encoding_dict]
 
     def _prepare_text(self) -> None:
@@ -27,7 +27,7 @@ class BPEncoder:
         self.encoding_dict.clear()
         self.allowed_chars.clear()
 
-    def _calculate_encoding_dict(self) -> None:
+    def _calculate_encoding_array(self) -> None:
         while True:
             freq_matrix = dict()
             for i in range(0, len(self.text), 2):
@@ -53,5 +53,5 @@ class BPEncoder:
         replacer = self.allowed_chars.get(replacer_key)
         self.text = self.text.replace(token, replacer)
         self.allowed_chars.pop(replacer_key)
-        self.encoding_dict.update({replacer: token})
+        self.encoding_dict.append((replacer, token))
         return True
